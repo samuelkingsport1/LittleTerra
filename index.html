@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>LittleTerra - Nation-Scale Terrarium Sandbox</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Top HUD -->
+    <div id="top-hud" class="hud-panel">
+        <div class="hud-group">
+            <button id="btn-toggle-tools" class="hud-button toggle-button" title="Toggle Tools Panel">🛠️</button>
+            <span class="hud-label">Year:</span>
+            <span id="sim-year" class="hud-value">0.00</span>
+        </div>
+        <div class="hud-group">
+            <button id="btn-pause" class="hud-button" title="Pause/Resume">⏸️</button>
+            <button id="btn-slower" class="hud-button" title="Slower">-</button>
+            <span id="speed-display" class="hud-value">1x</span>
+            <button id="btn-faster" class="hud-button" title="Faster">+</button>
+        </div>
+        <div class="hud-group">
+            <button id="btn-reset" class="hud-button" title="Reset Simulation">🔄</button>
+            <button id="btn-toggle-inspector" class="hud-button toggle-button" title="Toggle Inspector Panel">📊</button>
+        </div>
+    </div>
+
+    <!-- Left Tool Drawer -->
+    <div id="left-drawer" class="drawer left-drawer">
+        <div class="drawer-header">Tools</div>
+        <div class="tool-section">
+            <div class="tool-category">Biomass</div>
+            <button class="tool-button" data-tool="add-plants" title="Add Plants (P)">
+                🌱 Add Plants
+            </button>
+            <button class="tool-button" data-tool="add-herbivores" title="Add Herbivores (B)">
+                🐰 Add Herbivores
+            </button>
+            <button class="tool-button" data-tool="add-predators" title="Add Predators (R)">
+                🦊 Add Predators
+            </button>
+            <button class="tool-button" data-tool="remove-biomass" title="Remove Biomass">
+                ❌ Remove Biomass
+            </button>
+        </div>
+        <div class="tool-section">
+            <div class="tool-category">Environment</div>
+            <button class="tool-button" data-tool="rain" title="Add Rain (W)">
+                🌧️ Rain
+            </button>
+            <button class="tool-button" data-tool="fertilize" title="Add Nutrients (N)">
+                💊 Fertilize
+            </button>
+        </div>
+        <div class="tool-section">
+            <div class="tool-category">Overlays</div>
+            <select id="overlay-select" class="overlay-select">
+                <option value="terrain">Terrain</option>
+                <option value="temperature">Temperature</option>
+                <option value="water">Soil Water</option>
+                <option value="plants">Plant Biomass</option>
+                <option value="herbivores">Herbivores</option>
+                <option value="predators">Predators</option>
+                <option value="co2">CO₂</option>
+                <option value="o2">O₂</option>
+                <option value="clouds">Cloudiness</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Main Canvas Container -->
+    <div id="canvas-container">
+        <canvas id="main-canvas"></canvas>
+    </div>
+
+    <!-- Charts Section -->
+    <div id="charts-section">
+        <div class="chart-container">
+            <div class="chart-title">🌱 Biomass</div>
+            <canvas id="chart-biomass" class="chart-canvas"></canvas>
+        </div>
+        <div class="chart-container">
+            <div class="chart-title">🌡️ Temperature</div>
+            <canvas id="chart-temperature" class="chart-canvas"></canvas>
+        </div>
+        <div class="chart-container">
+            <div class="chart-title">💧 Water</div>
+            <canvas id="chart-water" class="chart-canvas"></canvas>
+        </div>
+        <div class="chart-container">
+            <div class="chart-title">🌫️ Atmosphere</div>
+            <canvas id="chart-atmosphere" class="chart-canvas"></canvas>
+        </div>
+    </div>
+
+    <!-- Right Tile Inspector -->
+    <div id="right-inspector" class="drawer right-inspector">
+        <div class="drawer-header">
+            <span>Tile Inspector</span>
+            <button id="btn-toggle-view" class="view-toggle-button" title="Toggle View">📊</button>
+        </div>
+        <div id="inspector-content" class="inspector-content">
+            <div class="inspector-hint">Click a tile to inspect</div>
+        </div>
+        <div id="event-log-content" class="event-log-content" style="display: none;">
+            <div class="log-controls">
+                <button id="btn-copy-log" class="log-button" title="Copy to Clipboard">📋 Copy</button>
+                <button id="btn-clear-log" class="log-button" title="Clear Log">🗑️ Clear</button>
+            </div>
+            <div id="event-log-list" class="event-log-list"></div>
+        </div>
+    </div>
+
+    <!-- Bottom Tool Dock -->
+    <div id="bottom-dock" class="dock-panel">
+        <button id="btn-undo" class="dock-button" title="Undo" disabled>↶</button>
+        <button id="btn-redo" class="dock-button" title="Redo" disabled>↷</button>
+        <div class="dock-separator"></div>
+        <div id="tool-info" class="tool-info">Select a tool</div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="src/simulation/TileData.js"></script>
+    <script src="src/simulation/TerrainGenerator.js"></script>
+    <script src="src/simulation/SimulationEngine.js"></script>
+    <script src="src/simulation/EventLogger.js"></script>
+    <script src="src/rendering/Renderer.js"></script>
+    <script src="src/rendering/ChartManager.js"></script>
+    <script src="src/ui/UIManager.js"></script>
+    <script src="src/tools/ToolManager.js"></script>
+    <script src="src/main.js"></script>
+</body>
+</html>
