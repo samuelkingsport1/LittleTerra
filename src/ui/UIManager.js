@@ -18,6 +18,10 @@ class UIManager {
             btnReset: document.getElementById('btn-reset'),
             btnUndo: document.getElementById('btn-undo'),
             btnRedo: document.getElementById('btn-redo'),
+            btnToggleTools: document.getElementById('btn-toggle-tools'),
+            btnToggleInspector: document.getElementById('btn-toggle-inspector'),
+            leftDrawer: document.getElementById('left-drawer'),
+            rightInspector: document.getElementById('right-inspector'),
             overlaySelect: document.getElementById('overlay-select'),
             inspectorContent: document.getElementById('inspector-content'),
             toolInfo: document.getElementById('tool-info'),
@@ -28,6 +32,8 @@ class UIManager {
         this.selectedTile = null;
         this.hoveredTile = null;
         this.isMouseDown = false;
+        this.toolsDrawerOpen = false;
+        this.inspectorDrawerOpen = false;
         
         this.setupEventListeners();
         this.updateUI();
@@ -70,6 +76,35 @@ class UIManager {
         this.elements.btnRedo.addEventListener('click', () => {
             if (this.engine.tileData.redo()) {
                 this.updateUndoRedoButtons();
+            }
+        });
+        
+        // Toggle buttons for responsive layout
+        this.elements.btnToggleTools.addEventListener('click', () => {
+            this.toolsDrawerOpen = !this.toolsDrawerOpen;
+            if (this.toolsDrawerOpen) {
+                this.elements.leftDrawer.classList.add('open');
+                // Close inspector if it's open (mobile only)
+                if (window.innerWidth <= 1200) {
+                    this.inspectorDrawerOpen = false;
+                    this.elements.rightInspector.classList.remove('open');
+                }
+            } else {
+                this.elements.leftDrawer.classList.remove('open');
+            }
+        });
+        
+        this.elements.btnToggleInspector.addEventListener('click', () => {
+            this.inspectorDrawerOpen = !this.inspectorDrawerOpen;
+            if (this.inspectorDrawerOpen) {
+                this.elements.rightInspector.classList.add('open');
+                // Close tools if it's open (mobile only)
+                if (window.innerWidth <= 1200) {
+                    this.toolsDrawerOpen = false;
+                    this.elements.leftDrawer.classList.remove('open');
+                }
+            } else {
+                this.elements.rightInspector.classList.remove('open');
             }
         });
         
