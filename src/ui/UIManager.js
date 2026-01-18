@@ -2,11 +2,12 @@
  * UIManager - Manages all UI interactions and updates
  */
 class UIManager {
-    constructor(simulationEngine, renderer, toolManager, chartManager) {
+    constructor(simulationEngine, renderer, toolManager, chartManager, eventLogger) {
         this.engine = simulationEngine;
         this.renderer = renderer;
         this.toolManager = toolManager;
         this.chartManager = chartManager;
+        this.eventLogger = eventLogger;
         
         // UI elements
         this.elements = {
@@ -20,10 +21,15 @@ class UIManager {
             btnRedo: document.getElementById('btn-redo'),
             btnToggleTools: document.getElementById('btn-toggle-tools'),
             btnToggleInspector: document.getElementById('btn-toggle-inspector'),
+            btnToggleView: document.getElementById('btn-toggle-view'),
+            btnCopyLog: document.getElementById('btn-copy-log'),
+            btnClearLog: document.getElementById('btn-clear-log'),
             leftDrawer: document.getElementById('left-drawer'),
             rightInspector: document.getElementById('right-inspector'),
             overlaySelect: document.getElementById('overlay-select'),
             inspectorContent: document.getElementById('inspector-content'),
+            eventLogContent: document.getElementById('event-log-content'),
+            eventLogList: document.getElementById('event-log-list'),
             toolInfo: document.getElementById('tool-info'),
             canvas: document.getElementById('main-canvas')
         };
@@ -34,6 +40,7 @@ class UIManager {
         this.isMouseDown = false;
         this.toolsDrawerOpen = false;
         this.inspectorDrawerOpen = false;
+        this.showingEventLog = false;
         
         this.setupEventListeners();
         this.updateUI();
@@ -61,6 +68,12 @@ class UIManager {
                 this.engine.reset();
                 if (this.chartManager) {
                     this.chartManager.reset();
+                }
+                if (this.eventLogger) {
+                    this.eventLogger.clear();
+                    if (this.showingEventLog) {
+                        this.updateEventLog();
+                    }
                 }
                 this.selectedTile = null;
                 this.updateInspector();
@@ -105,6 +118,48 @@ class UIManager {
                 }
             } else {
                 this.elements.rightInspector.classList.remove('open');
+            }
+        });
+        
+        // Toggle between inspector and event log
+        this.elements.btnToggleView.addEventListener('click', () => {
+            this.showingEventLog = !this.showingEventLog;
+            if (this.showingEventLog) {
+                this.elements.inspectorContent.style.display = 'none';
+                this.elements.eventLogContent.style.display = 'flex';
+                this.elements.btnToggleView.textContent = '🔍';
+                this.elements.btnToggleView.title = 'Show Tile Inspector';
+                this.updateEventLog();
+            } else {
+                this.elements.inspectorContent.style.display = 'block';
+                this.elements.eventLogContent.style.display = 'none';
+                this.elements.btnToggleView.textContent = '📊';
+                this.elements.btnToggleView.title = 'Show Event Log';
+            }
+        });
+        
+        // Copy log to clipboard
+        this.elements.btnCopyLog.addEventListener('click', () => {
+            const logText = this.eventLogger.getEventsAsText();
+            navigator.clipboard.writeText(logText).then(() => {
+                this.elements.btnCopyLog.textContent = '✅ Copied!';
+                setTimeout(() => {
+                    this.elements.btnCopyLog.textContent = '📋 Copy';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy log:', err);
+                this.elements.btnCopyLog.textContent = '❌ Failed';
+                setTimeout(() => {
+                    this.elements.btnCopyLog.textContent = '📋 Copy';
+                }, 2000);
+            });
+        });
+        
+        // Clear event log
+        this.elements.btnClearLog.addEventListener('click', () => {
+            if (confirm('Clear all event log entries?')) {
+                this.eventLogger.clear();
+                this.updateEventLog();
             }
         });
         
@@ -206,6 +261,19 @@ class UIManager {
         if (this.toolManager.currentTool) {
             this.toolManager.applyTool(tile.x, tile.y);
             this.updateUndoRedoButtons();
+            
+            // Log tool use
+            if (this.eventLogger) {
+                this.eventLogger.logToolUse(
+                    this.toolManager.currentTool,
+                    {x: tile.x, y: tile.y},
+                    this.engine.currentTime
+                );
+                if (this.showingEventLog) {
+                    this.updateEventLog();
+                }
+            }
+            
             if (this.selectedTile && this.selectedTile.index === tile.index) {
                 this.updateInspector();
             }
@@ -226,6 +294,11 @@ class UIManager {
         // Update inspector if tile is selected
         if (this.selectedTile) {
             this.updateInspector();
+        }
+        
+        // Update event log if showing
+        if (this.showingEventLog) {
+            this.updateEventLog();
         }
     }
     
@@ -299,6 +372,38 @@ class UIManager {
                 <span class="inspector-value">${value}</span>
             </div>
         `;
+    }
+    
+    updateEventLog() {
+        if (!this.eventLogger) return;
+        
+        const events = this.eventLogger.getRecentEvents(30);
+        
+        if (events.length === 0) {
+            this.elements.eventLogList.innerHTML = '<div style="text-align: center; color: #a0aec0; padding: 20px;">No events recorded yet</div>';
+            return;
+        }
+        
+        let html = '';
+        events.forEach(event => {
+            const dataStr = Object.entries(event.data)
+                .filter(([key]) => key !== 'simYear')
+                .map(([key, val]) => `${key}=${val}`)
+                .join(', ');
+            
+            html += `
+                <div class="event-log-item ${event.type}">
+                    <div>
+                        <span class="event-time">Year ${event.simYear.toFixed(2)}</span>
+                        <span class="event-type">${event.type}</span>
+                    </div>
+                    <div class="event-message">${event.message}</div>
+                    ${dataStr ? `<div style="font-size: 10px; color: #718096; margin-top: 2px;">${dataStr}</div>` : ''}
+                </div>
+            `;
+        });
+        
+        this.elements.eventLogList.innerHTML = html;
     }
     
     updateUndoRedoButtons() {

@@ -12,6 +12,7 @@ class LittleTerraApp {
         // Initialize systems
         this.tileData = new TileData(this.gridWidth, this.gridHeight, this.tileSize);
         this.engine = new SimulationEngine(this.tileData);
+        this.eventLogger = new EventLogger();
         
         const canvas = document.getElementById('main-canvas');
         this.renderer = new Renderer(canvas, this.tileData);
@@ -19,7 +20,7 @@ class LittleTerraApp {
         this.chartManager = new ChartManager(this.tileData);
         
         this.toolManager = new ToolManager(this.tileData);
-        this.uiManager = new UIManager(this.engine, this.renderer, this.toolManager, this.chartManager);
+        this.uiManager = new UIManager(this.engine, this.renderer, this.toolManager, this.chartManager, this.eventLogger);
         
         // Animation
         this.lastTime = 0;
@@ -54,6 +55,9 @@ class LittleTerraApp {
         // Update simulation (deltaTime is in seconds, converted to years in engine)
         if (deltaTime > 0 && deltaTime < 0.1) { // Sanity check
             this.engine.update(deltaTime);
+            
+            // Check for events periodically
+            this.eventLogger.checkForEvents(this.tileData, this.engine.currentTime);
         }
         
         // Update UI

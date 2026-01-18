@@ -97,9 +97,19 @@
 
     <!-- Right Tile Inspector -->
     <div id="right-inspector" class="drawer right-inspector">
-        <div class="drawer-header">Tile Inspector</div>
+        <div class="drawer-header">
+            <span>Tile Inspector</span>
+            <button id="btn-toggle-view" class="view-toggle-button" title="Toggle View">📊</button>
+        </div>
         <div id="inspector-content" class="inspector-content">
             <div class="inspector-hint">Click a tile to inspect</div>
+        </div>
+        <div id="event-log-content" class="event-log-content" style="display: none;">
+            <div class="log-controls">
+                <button id="btn-copy-log" class="log-button" title="Copy to Clipboard">📋 Copy</button>
+                <button id="btn-clear-log" class="log-button" title="Clear Log">🗑️ Clear</button>
+            </div>
+            <div id="event-log-list" class="event-log-list"></div>
         </div>
     </div>
 
@@ -114,6 +124,7 @@
     <!-- Scripts -->
     <script src="src/simulation/TileData.js"></script>
     <script src="src/simulation/SimulationEngine.js"></script>
+    <script src="src/simulation/EventLogger.js"></script>
     <script src="src/rendering/Renderer.js"></script>
     <script src="src/rendering/ChartManager.js"></script>
     <script src="src/ui/UIManager.js"></script>
