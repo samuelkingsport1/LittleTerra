@@ -2,10 +2,11 @@
  * UIManager - Manages all UI interactions and updates
  */
 class UIManager {
-    constructor(simulationEngine, renderer, toolManager) {
+    constructor(simulationEngine, renderer, toolManager, chartManager) {
         this.engine = simulationEngine;
         this.renderer = renderer;
         this.toolManager = toolManager;
+        this.chartManager = chartManager;
         
         // UI elements
         this.elements = {
@@ -52,6 +53,9 @@ class UIManager {
         this.elements.btnReset.addEventListener('click', () => {
             if (confirm('Reset simulation to initial state?')) {
                 this.engine.reset();
+                if (this.chartManager) {
+                    this.chartManager.reset();
+                }
                 this.selectedTile = null;
                 this.updateInspector();
             }
@@ -104,6 +108,9 @@ class UIManager {
         // Window resize
         window.addEventListener('resize', () => {
             this.renderer.updateDimensions();
+            if (this.chartManager) {
+                this.chartManager.resizeCanvases();
+            }
         });
     }
     

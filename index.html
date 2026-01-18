@@ -68,8 +68,30 @@
         </div>
     </div>
 
-    <!-- Main Canvas -->
-    <canvas id="main-canvas"></canvas>
+    <!-- Main Canvas Container -->
+    <div id="canvas-container">
+        <canvas id="main-canvas"></canvas>
+    </div>
+
+    <!-- Charts Section -->
+    <div id="charts-section">
+        <div class="chart-container">
+            <div class="chart-title">🌱 Biomass</div>
+            <canvas id="chart-biomass" class="chart-canvas"></canvas>
+        </div>
+        <div class="chart-container">
+            <div class="chart-title">🌡️ Temperature</div>
+            <canvas id="chart-temperature" class="chart-canvas"></canvas>
+        </div>
+        <div class="chart-container">
+            <div class="chart-title">💧 Water</div>
+            <canvas id="chart-water" class="chart-canvas"></canvas>
+        </div>
+        <div class="chart-container">
+            <div class="chart-title">🌫️ Atmosphere</div>
+            <canvas id="chart-atmosphere" class="chart-canvas"></canvas>
+        </div>
+    </div>
 
     <!-- Right Tile Inspector -->
     <div id="right-inspector" class="drawer right-inspector">
@@ -91,6 +113,7 @@
     <script src="src/simulation/TileData.js"></script>
     <script src="src/simulation/SimulationEngine.js"></script>
     <script src="src/rendering/Renderer.js"></script>
+    <script src="src/rendering/ChartManager.js"></script>
     <script src="src/ui/UIManager.js"></script>
     <script src="src/tools/ToolManager.js"></script>
     <script src="src/main.js"></script>

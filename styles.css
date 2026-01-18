@@ -7,41 +7,56 @@
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
     overflow: hidden;
-    background: #1a1a1a;
-    color: #ffffff;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #2d3748;
     touch-action: none;
     user-select: none;
     -webkit-user-select: none;
     -webkit-touch-callout: none;
 }
 
+/* Canvas Container */
+#canvas-container {
+    position: absolute;
+    top: 70px;
+    left: 260px;
+    right: 260px;
+    bottom: 260px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+}
+
 /* Canvas */
 #main-canvas {
-    position: absolute;
-    top: 50px;
-    left: 250px;
-    right: 250px;
-    bottom: 50px;
-    background: #000;
+    background: #fff;
     cursor: crosshair;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
 /* HUD Panels */
 .hud-panel {
     position: absolute;
-    background: rgba(30, 30, 30, 0.95);
-    border: 1px solid #444;
-    padding: 10px;
+    background: rgba(255, 255, 255, 0.95);
+    border: none;
+    border-radius: 12px;
+    padding: 15px 20px;
     display: flex;
     align-items: center;
     gap: 20px;
     z-index: 100;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
 #top-hud {
-    top: 0;
-    left: 0;
-    right: 0;
+    top: 10px;
+    left: 10px;
+    right: 10px;
     height: 50px;
     justify-content: space-between;
 }
@@ -54,57 +69,62 @@ body {
 
 .hud-label {
     font-size: 14px;
-    color: #aaa;
+    color: #718096;
+    font-weight: 500;
 }
 
 .hud-value {
     font-size: 16px;
     font-weight: bold;
-    color: #0f0;
+    color: #667eea;
     min-width: 60px;
 }
 
 .hud-button {
     padding: 8px 16px;
-    background: #333;
-    border: 1px solid #555;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
     color: #fff;
     cursor: pointer;
-    border-radius: 4px;
+    border-radius: 8px;
     font-size: 16px;
-    transition: background 0.2s;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
 }
 
 .hud-button:hover {
-    background: #444;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
 
 .hud-button:active {
-    background: #555;
+    transform: translateY(0);
 }
 
 /* Drawers */
 .drawer {
     position: absolute;
-    background: rgba(30, 30, 30, 0.95);
-    border: 1px solid #444;
-    padding: 10px;
+    background: rgba(255, 255, 255, 0.95);
+    border: none;
+    border-radius: 12px;
+    padding: 15px;
     z-index: 100;
     overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
 .left-drawer {
-    top: 50px;
-    left: 0;
-    width: 250px;
-    bottom: 50px;
+    top: 70px;
+    left: 10px;
+    width: 240px;
+    bottom: 70px;
 }
 
 .right-inspector {
-    top: 50px;
-    right: 0;
-    width: 250px;
-    bottom: 50px;
+    top: 70px;
+    right: 10px;
+    width: 240px;
+    bottom: 70px;
 }
 
 .drawer-header {
@@ -112,7 +132,8 @@ body {
     font-weight: bold;
     margin-bottom: 15px;
     padding-bottom: 10px;
-    border-bottom: 2px solid #555;
+    border-bottom: 2px solid #e2e8f0;
+    color: #2d3748;
 }
 
 /* Tool Buttons */
@@ -122,55 +143,62 @@ body {
 
 .tool-category {
     font-size: 12px;
-    color: #888;
+    color: #718096;
     text-transform: uppercase;
     margin-bottom: 8px;
     font-weight: bold;
+    letter-spacing: 0.5px;
 }
 
 .tool-button {
     width: 100%;
     padding: 12px;
     margin-bottom: 8px;
-    background: #2a2a2a;
-    border: 2px solid #444;
-    color: #fff;
+    background: linear-gradient(135deg, #f6f8fb 0%, #e9ecef 100%);
+    border: 2px solid #e2e8f0;
+    color: #2d3748;
     cursor: pointer;
-    border-radius: 4px;
+    border-radius: 8px;
     font-size: 14px;
     text-align: left;
     transition: all 0.2s;
+    font-weight: 500;
 }
 
 .tool-button:hover {
-    background: #333;
-    border-color: #666;
+    background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+    border-color: #cbd5e0;
+    transform: translateX(4px);
 }
 
 .tool-button.active {
-    background: #0066cc;
-    border-color: #0088ff;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-color: #667eea;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
 
 .overlay-select {
     width: 100%;
     padding: 10px;
-    background: #2a2a2a;
-    border: 2px solid #444;
-    color: #fff;
-    border-radius: 4px;
+    background: #fff;
+    border: 2px solid #e2e8f0;
+    color: #2d3748;
+    border-radius: 8px;
     font-size: 14px;
     cursor: pointer;
+    font-weight: 500;
 }
 
 /* Inspector */
 .inspector-content {
     font-size: 13px;
     line-height: 1.8;
+    color: #2d3748;
 }
 
 .inspector-hint {
-    color: #666;
+    color: #a0aec0;
     font-style: italic;
     text-align: center;
     margin-top: 20px;
@@ -181,19 +209,20 @@ body {
     justify-content: space-between;
     margin-bottom: 6px;
     padding: 4px;
-    border-radius: 3px;
+    border-radius: 6px;
 }
 
 .inspector-row:nth-child(even) {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(102, 126, 234, 0.05);
 }
 
 .inspector-label {
-    color: #aaa;
+    color: #718096;
+    font-weight: 500;
 }
 
 .inspector-value {
-    color: #0f0;
+    color: #667eea;
     font-weight: bold;
 }
 
@@ -203,42 +232,57 @@ body {
 }
 
 .inspector-trend.up {
-    color: #0f0;
+    color: #48bb78;
 }
 
 .inspector-trend.down {
-    color: #f00;
+    color: #f56565;
+}
+
+.inspector-section {
+    margin-bottom: 12px;
+}
+
+.inspector-section strong {
+    color: #2d3748;
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
 }
 
 /* Bottom Dock */
 .dock-panel {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
     height: 50px;
-    background: rgba(30, 30, 30, 0.95);
-    border-top: 1px solid #444;
+    background: rgba(255, 255, 255, 0.95);
+    border: none;
+    border-radius: 12px;
     padding: 10px 20px;
     display: flex;
     align-items: center;
     gap: 10px;
     z-index: 100;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
 .dock-button {
     padding: 8px 16px;
-    background: #333;
-    border: 1px solid #555;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
     color: #fff;
     cursor: pointer;
-    border-radius: 4px;
+    border-radius: 8px;
     font-size: 18px;
-    transition: background 0.2s;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
 }
 
 .dock-button:hover:not(:disabled) {
-    background: #444;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
 
 .dock-button:disabled {
@@ -249,23 +293,69 @@ body {
 .dock-separator {
     width: 1px;
     height: 30px;
-    background: #555;
+    background: #e2e8f0;
     margin: 0 10px;
 }
 
 .tool-info {
     flex: 1;
-    color: #aaa;
+    color: #718096;
     font-size: 14px;
+    font-weight: 500;
+}
+
+/* Charts Section */
+#charts-section {
+    position: absolute;
+    bottom: 70px;
+    left: 260px;
+    right: 260px;
+    height: 180px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    display: flex;
+    gap: 15px;
+}
+
+.chart-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.chart-title {
+    font-size: 12px;
+    font-weight: bold;
+    color: #2d3748;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.chart-canvas {
+    flex: 1;
+    background: #f7fafc;
+    border-radius: 8px;
 }
 
 /* Responsive Design */
-@media (max-width: 1024px) {
-    #main-canvas {
-        left: 0;
-        right: 0;
-        top: 50px;
-        bottom: 50px;
+@media (max-width: 1400px) {
+    #canvas-container {
+        left: 10px;
+        right: 10px;
+        top: 70px;
+        bottom: 70px;
+    }
+    
+    #charts-section {
+        left: 10px;
+        right: 10px;
+        bottom: 70px;
+        height: 0;
+        padding: 0;
+        overflow: hidden;
     }
     
     .left-drawer {
@@ -308,5 +398,13 @@ body {
     .right-inspector {
         width: 100%;
         max-width: 300px;
+    }
+    
+    #canvas-container {
+        bottom: 70px;
+    }
+    
+    #charts-section {
+        display: none;
     }
 }

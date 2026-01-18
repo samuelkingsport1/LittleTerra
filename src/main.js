@@ -16,8 +16,10 @@ class LittleTerraApp {
         const canvas = document.getElementById('main-canvas');
         this.renderer = new Renderer(canvas, this.tileData);
         
+        this.chartManager = new ChartManager(this.tileData);
+        
         this.toolManager = new ToolManager(this.tileData);
-        this.uiManager = new UIManager(this.engine, this.renderer, this.toolManager);
+        this.uiManager = new UIManager(this.engine, this.renderer, this.toolManager, this.chartManager);
         
         // Animation
         this.lastTime = 0;
@@ -56,6 +58,9 @@ class LittleTerraApp {
         
         // Update UI
         this.uiManager.updateUI();
+        
+        // Update charts
+        this.chartManager.update();
         
         // Render
         this.renderer.render();

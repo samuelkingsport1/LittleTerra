@@ -31,13 +31,18 @@ class Renderer {
     }
     
     updateDimensions() {
-        const rect = this.canvas.getBoundingClientRect();
-        this.canvas.width = rect.width;
-        this.canvas.height = rect.height;
+        const container = this.canvas.parentElement;
+        const rect = container.getBoundingClientRect();
         
-        // Calculate optimal tile size to fit the grid
-        this.tilePixelWidth = this.canvas.width / this.tileData.gridWidth;
-        this.tilePixelHeight = this.canvas.height / this.tileData.gridHeight;
+        // Make canvas square - use the smaller dimension
+        const size = Math.min(rect.width, rect.height);
+        
+        this.canvas.width = size;
+        this.canvas.height = size;
+        
+        // Calculate optimal tile size to fit the grid in a square
+        this.tilePixelWidth = size / this.tileData.gridWidth;
+        this.tilePixelHeight = size / this.tileData.gridHeight;
     }
     
     setOverlayMode(mode) {
