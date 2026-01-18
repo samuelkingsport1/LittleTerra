@@ -11,6 +11,11 @@ class LittleTerraApp {
         
         // Initialize systems
         this.tileData = new TileData(this.gridWidth, this.gridHeight, this.tileSize);
+        
+        // Generate randomized terrain with water sources
+        this.terrainGenerator = new TerrainGenerator(this.gridWidth, this.gridHeight);
+        this.terrainGenerator.generateTerrain(this.tileData);
+        
         this.engine = new SimulationEngine(this.tileData);
         this.eventLogger = new EventLogger();
         
@@ -31,9 +36,10 @@ class LittleTerraApp {
     }
     
     init() {
-        console.log('LittleTerra: Initializing nation-scale terrarium simulation');
+        console.log('LittleTerra: Initializing nation-scale terrarium simulation with randomized terrain');
         console.log(`Grid: ${this.gridWidth}x${this.gridHeight} tiles (${this.tileSize}km per tile)`);
         console.log(`Total area: ${this.gridWidth * this.tileSize}km x ${this.gridHeight * this.tileSize}km`);
+        console.log('Terrain: Generated with rivers, lakes, and varied elevation');
         
         // Initial render
         this.renderer.render();

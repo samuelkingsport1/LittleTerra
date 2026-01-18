@@ -386,11 +386,6 @@ class UIManager {
         
         let html = '';
         events.forEach(event => {
-            const dataStr = Object.entries(event.data)
-                .filter(([key]) => key !== 'simYear')
-                .map(([key, val]) => `${key}=${val}`)
-                .join(', ');
-            
             html += `
                 <div class="event-log-item ${event.type}">
                     <div>
@@ -398,9 +393,41 @@ class UIManager {
                         <span class="event-type">${event.type}</span>
                     </div>
                     <div class="event-message">${event.message}</div>
-                    ${dataStr ? `<div style="font-size: 10px; color: #718096; margin-top: 2px;">${dataStr}</div>` : ''}
-                </div>
             `;
+            
+            // Show cause analysis for die-offs
+            if (event.data.causes && event.data.causes.length > 0) {
+                html += `<div style="font-size: 10px; font-weight: bold; color: #e53e3e; margin-top: 4px;">ROOT CAUSES:</div>`;
+                event.data.causes.forEach(cause => {
+                    html += `<div style="font-size: 10px; color: #c53030; margin-left: 8px;">• ${cause}</div>`;
+                });
+            }
+            
+            // Show map-level data
+            if (event.data.mapData && event.data.mapData.length > 0) {
+                html += `<div style="font-size: 10px; font-weight: bold; color: #3182ce; margin-top: 4px;">MAP DATA:</div>`;
+                event.data.mapData.forEach(data => {
+                    html += `<div style="font-size: 10px; color: #2c5282; margin-left: 8px;">• ${data}</div>`;
+                });
+            }
+            
+            // Show other data
+            const otherData = Object.entries(event.data)
+                .filter(([key]) => key !== 'simYear' && key !== 'causes' && key !== 'mapData')
+                .map(([key, val]) => {
+                    // Handle position object
+                    if (key === 'position' && typeof val === 'object') {
+                        return `${key}=(${val.x},${val.y})`;
+                    }
+                    return `${key}=${val}`;
+                })
+                .join(', ');
+            
+            if (otherData) {
+                html += `<div style="font-size: 10px; color: #718096; margin-top: 2px;">${otherData}</div>`;
+            }
+            
+            html += `</div>`;
         });
         
         this.elements.eventLogList.innerHTML = html;
